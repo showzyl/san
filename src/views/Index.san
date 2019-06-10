@@ -1,0 +1,87 @@
+<template>
+  <div class="hello">
+    <p>hello {{msg}}</p>
+    <p>
+      <a href="/#/aa" class="l">用户信息</a>
+    </p>
+
+    <section>
+      <h3>循环</h3>
+      <ul>
+        <li s-for="item in list">{{ item }}</li>
+      </ul>
+    </section>
+
+    <section>
+      <h3>双向绑定</h3>
+      <input value="{= name =}" placeholder="please input">
+      <p>{{ name }}</p>
+    </section>
+
+
+    <section>
+      <h3>条件</h3>
+      <span s-if="isActive">Active</span>
+      <span s-elif="isOnline">Pending</span>
+      <span s-else>哈哈哈</span>
+    </section>
+
+
+    <section>
+      <h3>事件</h3>
+      <p on-click="onClick()">点我</p>
+    </section>
+
+
+  </div>
+</template>
+
+<script>
+  export default {
+    initData() {
+      return {
+        msg: 'lizi',
+        list: ['san', 'er', 'esui', 'etpl', 'esl'],
+        isActive: true
+      };
+    },
+    // 生命周期
+    created() {
+      console.log(`11111111111111: `)
+      this.data.set('isActive', false)
+      this.data.set('isOnline', false)
+    },
+    attached() {
+      setTimeout(() => {
+        this.data.set('isActive', true)
+      }, 2000)
+    },
+    detached() {
+      console.log(`detached: `)
+    },
+    disposed() {
+      console.log(`disposed: `)
+    },
+    updated() {
+      console.log(`updated: `)
+    },
+    // 生命周期 end
+
+    onClick() {
+      alert('我被点击了')
+    }
+  }
+</script>
+
+<style lang="less">
+  /*@import './main.css';*/
+  @import '../assets/css/lizi2.less';
+  .hello {
+    color: blue;
+    /*.l {*/
+      /*display: flex;*/
+      /*box-sizing: border-box;*/
+      /*width: 200px;*/
+    /*}*/
+  }
+</style>

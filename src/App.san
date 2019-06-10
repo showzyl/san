@@ -1,0 +1,23 @@
+<template>
+  <div class="hello">
+    <index />
+  </div>
+</template>
+
+<script>
+  import Index from './views/Index.san'
+  export default {
+    components: {
+      index: Index
+    },
+    initData() {
+      return {
+        msg: 'lizi'
+      };
+    },
+  }
+</script>
+
+<style lang="less">
+  @import "main.css";
+</style>
