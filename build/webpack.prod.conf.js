@@ -10,7 +10,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const cssnano = require('cssnano')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir)
@@ -22,6 +24,12 @@ const env = require('../config/' + process.env.env_config + '.env')
 const seen = new Set()
 const nameLength = 4
 
+console.log(`res: `,  JSON.stringify(utils.styleLoaders({
+  sourceMap: config.build.productionSourceMap,
+  extract: true,
+  usePostCSS: true
+})))
+
 const webpackConfig = merge(baseWebpackConfig, {
   mode: 'production',
   module: {
@@ -30,6 +38,21 @@ const webpackConfig = merge(baseWebpackConfig, {
       extract: true,
       usePostCSS: true
     })
+
+    // rules: [
+    //   // {
+    //   //   test: /\.css$/,
+    //   //   use: ExtractTextPlugin.extract({
+    //   //     fallback: 'style-loader',
+    //   //     use: 'css-loader'
+    //   //   })
+    //   // },
+    //   utils.styleLoaders({
+    //     sourceMap: config.build.productionSourceMap,
+    //     extract: true,
+    //     usePostCSS: true
+    //   })
+    // ]
   },
   devtool: config.build.productionSourceMap ? config.build.devtool : false,
   output: {
@@ -100,7 +123,14 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    new ExtractTextPlugin({
+      filename: (getPath) => {
+        console.log(`css: `, getPath('css/[name].css'))
+        return getPath('css/[name].css').replace('css/js', 'css');
+      },
+      allChunks: true
+    })
   ],
   optimization: {
     splitChunks: {
@@ -140,7 +170,12 @@ const webpackConfig = merge(baseWebpackConfig, {
       }),
       // Compress extracted CSS. We are using this plugin so that possible
       // duplicated CSS from different components can be deduped.
-      new OptimizeCSSAssetsPlugin()
+      new OptimizeCSSAssetsPlugin({
+        assetNameRegExp: /\.style\.css\.less$/g,
+        cssProcessor: cssnano,
+        cssProcessorOptions: { discardComments: { removeAll: true } },
+        canPrint: true
+      })
     ]
   }
 })

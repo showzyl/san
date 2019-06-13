@@ -10,7 +10,7 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir)
 }
 const createLintingRule = () => ({
-  test: /\.(js|vue)$/,
+  test: /\.(js|san)$/,
   loader: 'eslint-loader',
   enforce: 'pre',
   include: [resolve('src'), resolve('test')],
@@ -22,7 +22,6 @@ const createLintingRule = () => ({
 module.exports = {
   context: path.resolve(__dirname, '../'),
   entry: [
-    // 'babel-polyfill',
     './src/main.js'
   ],
   output: {
